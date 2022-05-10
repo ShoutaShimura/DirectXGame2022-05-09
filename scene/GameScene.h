@@ -62,6 +62,9 @@ class GameScene {
 	//デバッグカメラ
 	DebugCamera* debagCamera_ = nullptr;
 
+
+
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

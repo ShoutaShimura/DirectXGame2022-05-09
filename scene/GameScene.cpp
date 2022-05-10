@@ -3,6 +3,10 @@
 #include <cassert>
 #include"AxisIndicator.h"
 #include"PrimitiveDrawer.h"
+#include<math.h>
+
+
+
 
 GameScene::GameScene() {}
 
@@ -43,7 +47,79 @@ void GameScene::Initialize() {
 
 
 
-}
+	//X,Y,Z方向のスケーリングを設定
+	worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
+	//X,Y,Z軸周りの回転角を設定
+	worldTransform_.rotation_ = { 3.14f / 4.0f,3.14 / 4.0f,0.0f };
+	//X,Y,Z軸周りの平行移動を設定
+	worldTransform_.translation_ = { 10.0f,10.0f,10.0f };
+
+	//単位行列
+	Matrix4 unitMatrix;
+	unitMatrix.m[0][0] = 1;
+	unitMatrix.m[1][1] = 1;
+	unitMatrix.m[2][2] = 1;
+	unitMatrix.m[3][3] = 1;
+
+	//スケーリング行列を宣言
+	Matrix4 matScale;
+	matScale.m[0][0] = worldTransform_.scale_.x;
+	matScale.m[1][1] = worldTransform_.scale_.y;
+	matScale.m[2][2] = worldTransform_.scale_.z;
+	matScale.m[3][3] = 1;
+
+	//Z軸回転行列を設定
+	Matrix4 matRotZ;
+	matRotZ.m[0][0] = worldTransform_.rotation_.z;
+	matRotZ.m[0][1] = worldTransform_.rotation_.z;
+	matRotZ.m[1][0] = -worldTransform_.rotation_.z;
+	matRotZ.m[1][1] = worldTransform_.rotation_.z;
+	matRotZ.m[2][2] = 1;
+	matRotZ.m[3][3] = 1;
+
+	//X軸回転行列を設定
+	Matrix4 matRotX;
+	matRotX.m[1][1] = worldTransform_.rotation_.x;
+	matRotX.m[1][2] = worldTransform_.rotation_.x;
+	matRotX.m[2][1] = -worldTransform_.rotation_.x;
+	matRotX.m[2][2] = worldTransform_.rotation_.x;
+	matRotX.m[0][0] = 1;
+	matRotX.m[3][3] = 1;
+
+	//Y軸回転行列を設定
+	Matrix4 matRotY;
+	matRotY.m[0][0] = worldTransform_.rotation_.y;
+	matRotY.m[0][2] = worldTransform_.rotation_.y;
+	matRotY.m[2][0] = -worldTransform_.rotation_.y;
+	matRotY.m[2][2] = worldTransform_.rotation_.y;
+	matRotY.m[1][1] = 1;
+	matRotY.m[3][3] = 1;
+
+	//平行移動行列を宣言
+	Matrix4 matTrans = MathUtility::Matrix4Identity();
+
+	matTrans.m[3][0] = worldTransform_.translation_.x;
+	matTrans.m[3][1] = worldTransform_.translation_.y;
+	matTrans.m[3][2] = worldTransform_.translation_.z;
+
+	//単位行列を代入
+	worldTransform_.matWorld_ = unitMatrix;
+
+	//行列にそれぞれ掛け算して代入
+	//スケール
+	worldTransform_.matWorld_ *= matScale;
+
+	//回転
+	//worldTransform_.matWorld_ *= matRotZ;
+	worldTransform_.matWorld_ *= matRotX;
+	worldTransform_.matWorld_ *= matRotY;
+
+	//平行移動
+	worldTransform_.matWorld_ *= matTrans;
+
+	//行列の転送
+	worldTransform_.TransferMatrix();
+};
 
 void GameScene::Update() {
 	debagCamera_->Update();
@@ -80,7 +156,7 @@ void GameScene::Draw() {
 	model_->Draw(worldTransform_, debagCamera_->GetViewProjection(), textureHandle_);
 
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0, 0, 0), Vector3(10.0f, 0, 0), Vector4(255, 0, 0, 255));
+	//PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0, 0, 0), Vector3(10.0f, 0, 0), Vector4(255, 0, 0, 255));
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
