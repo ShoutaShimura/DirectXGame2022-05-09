@@ -4,9 +4,7 @@
 #include"AxisIndicator.h"
 #include"PrimitiveDrawer.h"
 #include<math.h>
-
-
-
+#include"Matrix4.h"
 
 GameScene::GameScene() {}
 
@@ -55,11 +53,9 @@ void GameScene::Initialize() {
 	worldTransform_.translation_ = { 10.0f,10.0f,10.0f };
 
 	//単位行列
+	Matrix4 mat;
 	Matrix4 unitMatrix;
-	unitMatrix.m[0][0] = 1;
-	unitMatrix.m[1][1] = 1;
-	unitMatrix.m[2][2] = 1;
-	unitMatrix.m[3][3] = 1;
+	mat.MatIdentity(unitMatrix);
 
 	//スケーリング行列を宣言
 	Matrix4 matScale;
@@ -79,10 +75,10 @@ void GameScene::Initialize() {
 
 	//X軸回転行列を設定
 	Matrix4 matRotX;
-	matRotX.m[1][1] =cos( worldTransform_.rotation_.x);
-	matRotX.m[1][2] =sin( worldTransform_.rotation_.x);
-	matRotX.m[2][1] =sin( -worldTransform_.rotation_.x);
-	matRotX.m[2][2] =cos( worldTransform_.rotation_.x);
+	matRotX.m[1][1] = cos(worldTransform_.rotation_.x);
+	matRotX.m[1][2] = sin(worldTransform_.rotation_.x);
+	matRotX.m[2][1] = sin(-worldTransform_.rotation_.x);
+	matRotX.m[2][2] = cos(worldTransform_.rotation_.x);
 	matRotX.m[0][0] = 1;
 	matRotX.m[3][3] = 1;
 
@@ -90,7 +86,7 @@ void GameScene::Initialize() {
 	Matrix4 matRotY;
 	matRotY.m[0][0] = cos(worldTransform_.rotation_.y);
 	matRotY.m[0][2] = sin(worldTransform_.rotation_.y);
-	matRotY.m[2][0] = sin( - worldTransform_.rotation_.y);
+	matRotY.m[2][0] = sin(-worldTransform_.rotation_.y);
 	matRotY.m[2][2] = cos(worldTransform_.rotation_.y);
 	matRotY.m[1][1] = 1;
 	matRotY.m[3][3] = 1;
@@ -178,3 +174,6 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+
+
