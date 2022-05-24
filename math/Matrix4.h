@@ -149,7 +149,7 @@ public:
 	};
 
 
-	Matrix4 CreatMatIdentity() {
+	Matrix4 CreateMatIdentity() {
 		Matrix4 mat;
 
 		for (int i = 0; i < 4; i++) {
