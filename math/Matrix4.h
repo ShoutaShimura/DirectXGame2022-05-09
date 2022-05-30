@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include<math.h>
+#include<Vector3.h>
+
 /// <summary>
 /// 行列
 /// </summary>
@@ -23,20 +25,20 @@ public:
 	Matrix4& operator*=(const Matrix4& m2);
 
 
-	/*Matrix4 Scaliing(float sx, float sy, float sz)
-	{
-		Matrix4 m = {};
+	//スケーリング行列作成
+	Matrix4 MatScaleCreate(Vector3 scale) {
 
-		m.m[0][0] = sx;
-		m.m[1][1] = sy;
-		m.m[2][2] = sz;
-		m.m[3][3] = 1;
+		Matrix4 matScale;
+		matScale.MatIdentity();
 
-		return m;
+		matScale.m[0][0] = scale.x;
+		matScale.m[1][1] = scale.y;
+		matScale.m[2][2] = scale.z;
 
-	};*/
+		return matScale;
+	}
 
-	void Scaliing(float sx, float sy, float sz)
+	void MatScale(float sx, float sy, float sz)
 	{
 		m[0][0] = sx;
 		m[1][1] = sy;
@@ -45,20 +47,30 @@ public:
 
 	};
 
-	//Matrix4 MatRotX(float rotX) {
+	void MatScale(Vector3 scale)
+	{
+		m[0][0] = scale.x;
+		m[1][1] = scale.y;
+		m[2][2] = scale.z;
+		m[3][3] = 1;
 
-	//	Matrix4 m = {};
+	};
 
-	//	m.m[1][1] = cos(rotX);
-	//	m.m[1][2] = sin(rotX);
-	//	m.m[2][1] = sin(-rotX);
-	//	m.m[2][2] = cos(rotX);
-	//	m.m[0][0] = 1;
-	//	m.m[3][3] = 1;
 
-	//	return m;
+	Matrix4 MatRotXCreate(float rotX) {
 
-	//};
+		Matrix4 m = {};
+
+		m.m[1][1] = cos(rotX);
+		m.m[1][2] = sin(rotX);
+		m.m[2][1] = sin(-rotX);
+		m.m[2][2] = cos(rotX);
+		m.m[0][0] = 1;
+		m.m[3][3] = 1;
+
+		return m;
+
+	};
 
 	void MatRotX(float rotX) {
 
@@ -71,7 +83,7 @@ public:
 
 	};
 
-	/*Matrix4 MatRotY(float rotY) {
+	Matrix4 MatRotYCreate(float rotY) {
 
 		Matrix4 m = {};
 
@@ -83,7 +95,7 @@ public:
 		m.m[3][3] = 1;
 
 		return m;
-	};*/
+	};
 
 
 	void MatRotY(float rotY) {
@@ -98,7 +110,7 @@ public:
 	};
 
 
-	/*Matrix4 MatRotZ(float rotZ) {
+	Matrix4 MatRotZCreate(float rotZ) {
 
 		Matrix4 m = {};
 
@@ -111,7 +123,7 @@ public:
 
 		return m;
 
-	};*/
+	};
 
 	void MatRotZ(float rotZ) {
 
@@ -124,18 +136,19 @@ public:
 
 	};
 
-	/*Matrix4 MatTrans(float tx, float ty, float tz)
+
+	Matrix4 MatTransCreate(float tx, float ty, float tz)
 	{
 		Matrix4 m = {};
 
-		MatIdentity(m);
+		m.MatIdentity();
 
 		m.m[3][0] = tx;
 		m.m[3][1] = ty;
 		m.m[3][2] = tz;
 
 		return m;
-	};*/
+	};
 
 	void MatTrans(float tx, float ty, float tz) {
 
@@ -148,8 +161,18 @@ public:
 
 	};
 
+	void MatTrans(Vector3 t) {
 
-	Matrix4 CreateMatIdentity() {
+		MatIdentity();
+
+		m[3][0] = t.x;
+		m[3][1] = t.y;
+		m[3][2] = t.z;
+
+
+	};
+
+	Matrix4 MatIdentityCreate() {
 		Matrix4 mat;
 
 		for (int i = 0; i < 4; i++) {
@@ -173,7 +196,7 @@ public:
 	;
 	float ToRadian(float angle) { return angle * 3.14 / 180; }
 
-
+	
 
 
 
