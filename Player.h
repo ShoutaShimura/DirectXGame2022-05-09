@@ -1,7 +1,12 @@
 #pragma once
+
 #include "Model.h"
 #include "WorldTransform.h"
 #include <cassert>
+#include "Input.h"
+#include "DebugText.h"
+#include "Matrix4.h"
+
 
 /// <summary>
 /// 自キャラ
@@ -27,7 +32,13 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	/// <param name="viewProjection>ビュープロジェクション（参照渡し）</param>
+	void Draw(ViewProjection& viewProjection);
+
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
 
 private:
 
@@ -39,6 +50,12 @@ private:
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	//入力処理するため
+	Input* input_ = nullptr;
+
+	//デバッグテキスト
+	DebugText* debugText_ = nullptr;
 
 };
 

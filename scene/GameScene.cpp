@@ -14,6 +14,8 @@ GameScene::~GameScene() {
 
 	//自キャラの解放
 	delete player_;
+
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -32,26 +34,21 @@ void GameScene::Initialize() {
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
-	//デバッグカメラの生成
-	//debugCamera_ = new DebugCamera(1280, 720);
-
-	////軸方向表示の表示を有効にする
-	//AxisIndicator::GetInstance()->SetVisible(true);
-	////軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
-	//AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+	//デバッグカメラ
+	debugCamera_ = new DebugCamera(1280, 720);
 
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initialize();
-	
+	player_->Initialize(model_,textureHandle_);
 };
 
 void GameScene::Update() {
-
 	//自キャラの更新
 	player_->Update();
 	
+	debugText_->SetPos(50, 80);
+	debugText_->Printf("eye={%f,%f,%f}", viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
 }
 void GameScene::Draw() {
 
@@ -82,7 +79,7 @@ void GameScene::Draw() {
 	/// </summary>
 
 	//自キャラの描画
-	player_->Draw();
+	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

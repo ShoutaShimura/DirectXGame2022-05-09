@@ -66,10 +66,10 @@ class GameScene {
 
 
 public:
-
-
-
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	
+	//デバッグカメラ有効
+	bool isDebugcameraActive_ = false;
 };
