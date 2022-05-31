@@ -6,7 +6,7 @@
 #include "Input.h"
 #include "DebugText.h"
 #include "Matrix4.h"
-
+#include "PlayerBullet.h"
 
 /// <summary>
 /// 自キャラ
@@ -40,6 +40,16 @@ public:
 	/// </summary>
 	void Move();
 
+	/// <summary>
+	/// 旋回（回転）
+	/// </summary>
+	void Rotate();
+
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	void Attack();
+
 private:
 
 	//ワールド変換データ
@@ -56,6 +66,9 @@ private:
 
 	//デバッグテキスト
 	DebugText* debugText_ = nullptr;
+
+	//弾
+	PlayerBullet* bullet_ = nullptr;
 
 };
 

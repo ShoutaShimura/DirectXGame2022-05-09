@@ -28,9 +28,15 @@ void Player::Update()
 {
 	//移動
 	Move();
+
+	//キャラクター攻撃処理
+	Attack();
 	
-	
-	
+	//弾更新
+	if (bullet_) {
+		bullet_->Update();
+	}
+
 	debugText_->SetPos(50, 50);
 	debugText_->Printf("Pos={%f,%f,%f}", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
 }
@@ -41,6 +47,10 @@ Player::Draw(ViewProjection& viewProjection)
 	//3Dモデルを描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
+	//弾描画
+	if (bullet_) {
+		bullet_->Draw(viewProjection);
+	}
 }
 
 void Player::Move()
@@ -48,7 +58,7 @@ void Player::Move()
 	//キャラクターの移動ベクトル
 	Vector3 move = { 0,0,0 };
 
-	const float speed = 0.2f;
+	const float speed = 0.5f;
 
 	//移動ベクトルを変更する処理
 	if (input_->PushKey(DIK_LEFT)) {
@@ -78,14 +88,55 @@ void Player::Move()
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
+	Rotate();
+
 	Matrix4 unit;
 	unit.MatIdentity();
 	worldTransform_.matWorld_ = unit;
+	Matrix4 matRotZ;
+	matRotZ.MatRotZ(worldTransform_.rotation_.z);
+	Matrix4 matRotX;
+	matRotX.MatRotX(worldTransform_.rotation_.x);
+	Matrix4 matRotY;
+	matRotY.MatRotY(worldTransform_.rotation_.y);
 	Matrix4 matTrans;
 	matTrans.MatTrans(worldTransform_.translation_);
 
+	worldTransform_.matWorld_ *= matRotZ;
+	worldTransform_.matWorld_ *= matRotX;
+	worldTransform_.matWorld_ *= matRotY;
 	worldTransform_.matWorld_ *= matTrans;
 
 	//行列更新
 	worldTransform_.TransferMatrix();
+}
+
+void Player::Rotate()
+{
+	
+	const float speed = 0.05f;
+
+	//移動ベクトルを変更する処理
+	if (input_->PushKey(DIK_U)) {
+		worldTransform_.rotation_.y -= speed;
+	}
+	else if (input_->PushKey(DIK_I)) {
+		worldTransform_.rotation_.y += speed;
+	}
+
+
+}
+
+void Player::Attack()
+{
+	if (input_->TriggerKey(DIK_SPACE)) {
+
+		//弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		//弾を登録する
+		bullet_ = newBullet;
+	}
+
 }
