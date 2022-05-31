@@ -10,6 +10,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugCamera.h"
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -54,32 +55,18 @@ class GameScene {
 	//3Dモデル
 	Model* model_ = nullptr;
 
-	//ワールドトランスフォーム
-	WorldTransform worldTransforms_[100];
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
-	//カメラ上方向の角度
-	//float viewAngle = 0.0f;
+	//自キャラ
+	Player* player_ = nullptr;
+
 
 public:
-	//パーツID
-	enum PartId {
-		kRoot,
-		kSpine,
-		kChest,
-		kHead,
-		kArmL,
-		kArmR,
-		kHip,
-		kLegL,
-		kLegR,
 
-		kNumPartId
-	};
 
 
 	/// <summary>
