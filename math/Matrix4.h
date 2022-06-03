@@ -83,6 +83,27 @@ public:
 
 	};
 
+	Matrix4 MatRot(Vector3 rot) {
+
+		Matrix4 unit;
+		unit.MatIdentity();
+
+		Matrix4 matRotX;
+		Matrix4 matRotY;
+		Matrix4 matRotZ;
+
+		matRotX.MatRotX(rot.x);
+		matRotY.MatRotY(rot.y);
+		matRotZ.MatRotZ(rot.z);
+
+		unit *= matRotZ;
+		unit *= matRotX;
+		unit *= matRotY;
+
+		return unit;
+
+	}
+
 	Matrix4 MatRotYCreate(float rotY) {
 
 		Matrix4 m = {};
@@ -193,11 +214,33 @@ public:
 		}
 	}
 
-	;
+
 	float ToRadian(float angle) { return angle * 3.14 / 180; }
 
-	
 
+	Matrix4 MatCal(Vector3 scale, Vector3 rot, Vector3 trans) {
+
+		Matrix4 unit;
+		unit.MatIdentity();
+		Matrix4 matScale;
+		matScale.MatScale(scale);
+		Matrix4 matRotZ;
+		matRotZ.MatRotZ(rot.z);
+		Matrix4 matRotX;
+		matRotX.MatRotX(rot.x);
+		Matrix4 matRotY;
+		matRotY.MatRotY(rot.y);
+		Matrix4 matTrans;
+		matTrans.MatTrans(trans);
+
+		unit *= matScale;
+		unit *= matRotZ;
+		unit *= matRotX;
+		unit *= matRotY;
+		unit *= matTrans;
+
+		return unit;
+	}
 
 
 

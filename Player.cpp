@@ -31,10 +31,10 @@ void Player::Update()
 
 	//キャラクター攻撃処理
 	Attack();
-	
+
 	//弾更新
-	if (bullet_) {
-		bullet_->Update();
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->Update();
 	}
 
 	debugText_->SetPos(50, 50);
@@ -48,8 +48,8 @@ Player::Draw(ViewProjection& viewProjection)
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
 	//弾描画
-	if (bullet_) {
-		bullet_->Draw(viewProjection);
+	for (std::unique_ptr<PlayerBullet>& bullet:bullets_) {
+		bullet->Draw(viewProjection);
 	}
 }
 
@@ -93,19 +93,7 @@ void Player::Move()
 	Matrix4 unit;
 	unit.MatIdentity();
 	worldTransform_.matWorld_ = unit;
-	Matrix4 matRotZ;
-	matRotZ.MatRotZ(worldTransform_.rotation_.z);
-	Matrix4 matRotX;
-	matRotX.MatRotX(worldTransform_.rotation_.x);
-	Matrix4 matRotY;
-	matRotY.MatRotY(worldTransform_.rotation_.y);
-	Matrix4 matTrans;
-	matTrans.MatTrans(worldTransform_.translation_);
-
-	worldTransform_.matWorld_ *= matRotZ;
-	worldTransform_.matWorld_ *= matRotX;
-	worldTransform_.matWorld_ *= matRotY;
-	worldTransform_.matWorld_ *= matTrans;
+	worldTransform_.matWorld_ = unit.MatCal(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
 	//行列更新
 	worldTransform_.TransferMatrix();
@@ -113,7 +101,7 @@ void Player::Move()
 
 void Player::Rotate()
 {
-	
+
 	const float speed = 0.05f;
 
 	//移動ベクトルを変更する処理
@@ -132,11 +120,12 @@ void Player::Attack()
 	if (input_->TriggerKey(DIK_SPACE)) {
 
 		//弾を生成し、初期化
-		PlayerBullet* newBullet = new PlayerBullet();
+		//PlayerBullet* newBullet = new PlayerBullet();
+		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 		newBullet->Initialize(model_, worldTransform_.translation_);
 
 		//弾を登録する
-		bullet_ = newBullet;
+		bullets_.push_back(std::move(newBullet));
 	}
 
 }
