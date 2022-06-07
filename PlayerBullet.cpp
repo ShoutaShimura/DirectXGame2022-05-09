@@ -39,13 +39,14 @@ void PlayerBullet::Update()
 	}
 
 	//çsóÒÇçXêV
-	Matrix4 unit;
-	unit.MatIdentity();
-	worldTransform_.matWorld_ = unit;
-	worldTransform_.matWorld_ = unit.MatCal(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+	
+		Matrix4 unit;
+		unit.MatIdentity();
+		worldTransform_.matWorld_ = unit;
+		worldTransform_.matWorld_ = unit.MatCal(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
-	worldTransform_.TransferMatrix();
-
+		worldTransform_.TransferMatrix();
+	
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection)

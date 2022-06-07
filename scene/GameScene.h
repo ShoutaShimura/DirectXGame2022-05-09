@@ -11,6 +11,7 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include "Player.h"
+#include"Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -64,6 +65,12 @@ class GameScene {
 	//自キャラ
 	Player* player_ = nullptr;
 
+	//敵
+	Enemy* enemy_ = nullptr;
+
+	Vector3 velocty;
+
+	WorldTransform worldTransform_;
 
 public:
 	/// <summary>

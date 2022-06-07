@@ -7,6 +7,7 @@
 #include "Matrix4.h"
 #include <random> 
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -16,6 +17,8 @@ GameScene::~GameScene() {
 	delete player_;
 
 	delete debugCamera_;
+
+	delete enemy_;
 }
 
 void GameScene::Initialize() {
@@ -40,13 +43,22 @@ void GameScene::Initialize() {
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initialize(model_,textureHandle_);
+	player_->Initialize(model_, textureHandle_);
+
+	enemy_ = new Enemy();
+
+	enemy_->Initialize(model_, worldTransform_.translation_);
+
 };
 
 void GameScene::Update() {
 	//自キャラの更新
 	player_->Update();
-	
+
+	if (enemy_ != nullptr) {
+		enemy_->Update();
+	}
+
 	debugText_->SetPos(50, 80);
 	debugText_->Printf("eye={%f,%f,%f}", viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
 }
@@ -78,8 +90,14 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
+
+	if (enemy_ != nullptr) {
+		enemy_->Draw(viewProjection_);
+	}
+
 	//自キャラの描画
 	player_->Draw(viewProjection_);
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
