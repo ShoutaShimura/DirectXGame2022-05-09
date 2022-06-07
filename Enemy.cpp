@@ -20,20 +20,19 @@ void Enemy::Initialize(Model* model, const Vector3& position)
 	worldTransform_.Initialize();
 
 	worldTransform_.translation_ = position;
+
+	debugText_ = DebugText::GetInstance();
+
 }
+
+void(Enemy::* Enemy::spFuncTable[])() = {
+	&Enemy::Approach,
+	&Enemy::Leave
+};
 
 void Enemy::Update()
 {
-	switch (phase_)
-	{
-	case Enemy::Phase::Approach:
-	default:
-		Approach();
-		break;
-	case Enemy::Phase::Leave:
-		Leave();
-		break;
-	}
+	(this->*spFuncTable[static_cast<size_t>(phase_)])();
 
 	//行列を更新
 	Matrix4 unit;
@@ -42,6 +41,11 @@ void Enemy::Update()
 	worldTransform_.matWorld_ = unit.MatCal(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
 	worldTransform_.TransferMatrix();
+
+	//デバック用表示
+	debugText_->SetPos(50, 100);
+	debugText_->Printf("enemy={%f,%f,%f}",worldTransform_.translation_.x,worldTransform_.translation_.y,worldTransform_.translation_.z);
+
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)

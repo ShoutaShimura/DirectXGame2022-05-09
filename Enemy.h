@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include <cassert>
+#include"DebugText.h"
 
 /// <summary>
 /// 敵
@@ -36,6 +37,9 @@ public:
 
 private:
 
+	//メンバ関数ポインタ
+	static void(Enemy::* spFuncTable[])();
+
 	//ワールド変換データ
 	WorldTransform worldTransform_;
 
@@ -56,5 +60,9 @@ private:
 
 	//フェーズ
 	Phase phase_ = Phase::Approach;
+
+
+	//デバックテキスト
+	DebugText* debugText_ = nullptr;
 };
 
