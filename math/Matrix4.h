@@ -193,7 +193,7 @@ public:
 
 	};
 
-	Matrix4 MatIdentityCreate() {
+	Matrix4 CreateMatIdentity() {
 		Matrix4 mat;
 
 		for (int i = 0; i < 4; i++) {
@@ -218,7 +218,7 @@ public:
 	float ToRadian(float angle) { return angle * 3.14 / 180; }
 
 
-	Matrix4 MatCal(Vector3 scale, Vector3 rot, Vector3 trans) {
+	Matrix4 MatCal(const Vector3& scale, const Vector3& rot, const Vector3& trans) {
 
 		Matrix4 unit;
 		unit.MatIdentity();
@@ -243,7 +243,18 @@ public:
 	}
 
 
+	Vector3 VecMat(const Vector3& vec3, const Matrix4& mat4) {
 
+		Vector3 vec = vec3;
+		Matrix4 mat = mat4;
+
+		vec.x = vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0];
+		vec.y = vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1];
+		vec.z = vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2];
+
+		return vec;
+
+	}
 
 
 

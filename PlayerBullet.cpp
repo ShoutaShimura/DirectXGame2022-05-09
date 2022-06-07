@@ -8,7 +8,7 @@ PlayerBullet::~PlayerBullet()
 {
 }
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position)
+void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector3& velocity)
 {
 	//NULLポインタチェック
 	assert(model);
@@ -23,31 +23,29 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position)
 	//引数で受け取った初期座標をリセット
 	worldTransform_.translation_ = position;
 
+	//引数で受け取った速度をメンバ変数に代入
+	velocity_ = velocity;
+
 }
 
 void PlayerBullet::Update()
 {
+	//座標を移動させる（１フレーム分の移動を足しこむ）
+	worldTransform_.translation_ += velocity_;
+
+	//時間経過でデス
+	if (--deathTimer_ <= 0) {
+		isDead_ = true;
+	}
+
+	//行列を更新
 	Matrix4 unit;
 	unit.MatIdentity();
 	worldTransform_.matWorld_ = unit;
-	Matrix4 matScale;
-	matScale.MatScale(worldTransform_.scale_);
-	Matrix4 matRotZ;
-	matRotZ.MatRotZ(worldTransform_.rotation_.z);
-	Matrix4 matRotX;
-	matRotX.MatRotX(worldTransform_.rotation_.x);
-	Matrix4 matRotY;
-	matRotY.MatRotY(worldTransform_.rotation_.y);
-	Matrix4 matTrans;
-	matTrans.MatTrans(worldTransform_.translation_);
-
-	worldTransform_.matWorld_ *= matScale;
-	worldTransform_.matWorld_ *= matRotZ;
-	worldTransform_.matWorld_ *= matRotX;
-	worldTransform_.matWorld_ *= matRotY;
-	worldTransform_.matWorld_ *= matTrans;
+	worldTransform_.matWorld_ = unit.MatCal(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
 	worldTransform_.TransferMatrix();
+
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection)
