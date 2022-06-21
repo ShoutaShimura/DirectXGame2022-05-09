@@ -2,10 +2,12 @@
 
 Enemy::Enemy()
 {
+	state_ = new EnemyStateApproach();
 }
 
 Enemy::~Enemy()
 {
+	delete state_;
 }
 
 void Enemy::Initialize(Model* model, const Vector3& position)
@@ -25,15 +27,10 @@ void Enemy::Initialize(Model* model, const Vector3& position)
 
 }
 
-void(Enemy::* Enemy::spFuncTable[])() = {
-	&Enemy::Approach,
-	&Enemy::Leave
-};
 
 void Enemy::Update()
 {
-	(this->*spFuncTable[static_cast<size_t>(phase_)])();
-
+	
 	//行列を更新
 	Matrix4 unit;
 	unit.MatIdentity();
@@ -69,4 +66,15 @@ void Enemy::Leave()
 	//移動(ベクトルを加算)
 	velocity_ = { 0.5f,0.5f,0 };
 	worldTransform_.translation_ += velocity_;
+}
+
+void Enemy::changeState(BaseEnemyState* newState)
+{
+}
+
+void Enemy::Move(float x, float y, float z)
+{
+	Vector3 vel = { x,y,z };
+
+	worldTransform_.translation_ += vel;
 }

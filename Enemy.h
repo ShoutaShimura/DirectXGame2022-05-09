@@ -4,6 +4,9 @@
 #include "ViewProjection.h"
 #include <cassert>
 #include"DebugText.h"
+#include "BaseEnemyState.h"
+#include "EnemyStateApproach.h"
+#include"EnemyStateLeave.h"
 
 /// <summary>
 /// 敵
@@ -35,10 +38,10 @@ public:
 	void Approach();
 	void Leave();
 
-private:
+	void changeState(BaseEnemyState* newState);
 
-	//メンバ関数ポインタ
-	static void(Enemy::* spFuncTable[])();
+
+private:
 
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -60,6 +63,11 @@ private:
 
 	//フェーズ
 	Phase phase_ = Phase::Approach;
+
+	BaseEnemyState* state_;
+
+	void Move(float x, float y, float z);
+	Vector3 GetPos() { return worldTransform_.translation_; }
 
 
 	//デバックテキスト
