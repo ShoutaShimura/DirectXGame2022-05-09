@@ -71,6 +71,7 @@ class GameScene {
 	Vector3 velocty;
 
 	WorldTransform worldTransform_;
+	WorldTransform EworldTransform_;
 
 public:
 	/// <summary>

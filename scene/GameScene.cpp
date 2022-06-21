@@ -47,8 +47,9 @@ void GameScene::Initialize() {
 
 	enemy_ = new Enemy();
 
-	worldTransform_.translation_ = { 0,2,50};
-	enemy_->Initialize(model_, worldTransform_.translation_);
+	worldTransform_.translation_ = { 0,0,50 };
+	EworldTransform_.translation_ = { 20,0,50 };
+	enemy_->Initialize(model_, EworldTransform_.translation_);
 
 };
 

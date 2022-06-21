@@ -3,7 +3,10 @@
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include <cassert>
-#include"DebugText.h"
+#include "DebugText.h"
+#include "EnemyBullet.h"
+#include <memory> 
+#include <list>
 
 /// <summary>
 /// 敵
@@ -35,7 +38,26 @@ public:
 	void Approach();
 	void Leave();
 
+	/// <summary>
+	/// 弾発射
+	/// </summary>
+	void Fire();
+
+public:
+
+	//発射間隔
+	static const int kFireInterval = 60;
+
+	//接近フェーズ初期化
+	void ApproachReset();
+
 private:
+
+	//弾
+	std::list<std::unique_ptr<EnemyBullet>> ebullets_;
+
+	//発射タイマー
+	int32_t fireTimer = 0;
 
 	//メンバ関数ポインタ
 	static void(Enemy::* spFuncTable[])();
