@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include <assert.h>
+#include "DebugText.h"
 
 /// <summary>
 /// 敵の弾
@@ -32,6 +33,11 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	//衝突したら呼び出されるコールバック関数
+	void OnCollision();
+
+	//ワールド座標を取得
+	Vector3 GetWorldPotision();
 
 private:
 
@@ -53,5 +59,8 @@ private:
 
 	//デスフラグ
 	bool isDead_ = false;
+
+	//デバックテキスト
+	DebugText* debugText_ = nullptr;
 };
 

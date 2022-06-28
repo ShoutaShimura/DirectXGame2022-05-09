@@ -18,15 +18,14 @@ void Enemy::Initialize(Model* model, const Vector3& position)
 
 	textureHandle_ = TextureManager::Load("enemy.png");
 
-	worldTransform_.Initialize();
-
 	worldTransform_.translation_ = position;
 
 	debugText_ = DebugText::GetInstance();
 
-
 	//接近フェーズ初期化
 	ApproachReset();
+
+	worldTransform_.Initialize();
 }
 
 void(Enemy::* Enemy::spFuncTable[])() = {
@@ -36,6 +35,11 @@ void(Enemy::* Enemy::spFuncTable[])() = {
 
 void Enemy::Update()
 {
+	//デスフラグの立った弾を削除
+	ebullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
+		return bullet->IsDead();
+	});
+
 	for (std::unique_ptr<EnemyBullet>& ebullet:ebullets_) {
 		ebullet->Update();
 	}
@@ -53,6 +57,8 @@ void Enemy::Update()
 	//デバック用表示
 	debugText_->SetPos(50, 100);
 	debugText_->Printf("enemy={%f,%f,%f}", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
+
+	
 
 }
 
@@ -95,7 +101,7 @@ void Enemy::Fire()
 	assert(player_);
 
 	//弾の速度
-	const float baseSpeed = 2.0f;
+	const float baseSpeed = 1.0f;
 	
 
 	Vector3 playerPos = player_->GetWorldPotision();
@@ -135,4 +141,8 @@ void Enemy::ApproachReset()
 {
 	//発射タイマーを初期化
 	fireTimer = kFireInterval;
+}
+
+void Enemy::OnCollision()
+{
 }

@@ -15,6 +15,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 	assert(model);
 
 	model_ = model;
+
 	textureHandle_ = textureHandle;
 
 	//シングルトンインスタンスを取得する
@@ -78,6 +79,13 @@ void Player::Move()
 	}
 	else if (input_->PushKey(DIK_DOWN)) {
 		move += { 0, -speed, 0 };
+	}
+
+	if (input_->PushKey(DIK_W)) {
+		move += { 0,0, speed};
+	}
+	else if (input_->PushKey(DIK_S)) {
+		move += { 0,0, -speed };
 	}
 
 	//座標移動（ベクトルの加算）
@@ -155,4 +163,8 @@ Vector3 Player::GetWorldPotision()
 
 
 	return worldPos;
+}
+
+void Player::OnCollision()
+{
 }

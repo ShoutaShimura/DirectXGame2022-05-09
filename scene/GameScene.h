@@ -44,6 +44,11 @@ class GameScene {
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// 衝突判定と応答
+	/// </summary>
+	void CheckAllCollisions();
+
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -72,6 +77,9 @@ class GameScene {
 
 	WorldTransform worldTransform_;
 	WorldTransform EworldTransform_;
+
+	const float playerSize = 1;
+	const float enemySize = 1;
 
 public:
 	/// <summary>

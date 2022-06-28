@@ -51,8 +51,14 @@ public:
 	//ワールド座標を取得
 	Vector3 GetWorldPotision();
 
-//接近フェーズ初期化
+	//接近フェーズ初期化
 	void ApproachReset();
+
+	//衝突したら呼び出されるコールバック関数
+	void OnCollision();
+
+	//弾リストを取得
+	const std::list < std::unique_ptr<EnemyBullet>>& GetBullets() { return ebullets_; }
 
 public:
 
