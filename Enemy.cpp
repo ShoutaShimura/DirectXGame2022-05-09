@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include"Player.h"
 
 Enemy::Enemy()
 {
@@ -91,9 +92,21 @@ void Enemy::Leave()
 
 void Enemy::Fire()
 {
+	assert(player_);
+
 	//弾の速度
-	const float kBulletSpeed = -2.0f;
-	Vector3 bVelocity(0, 0, kBulletSpeed);
+	const float baseSpeed = 2.0f;
+	
+
+	Vector3 playerPos = player_->GetWorldPotision();
+
+	Vector3 enemyPos = GetWorldPotision();
+
+	Vector3 v = playerPos - enemyPos;
+
+	v = v.normalaize();
+
+	Vector3 bVelocity = v * baseSpeed;
 
 	Vector3 position = worldTransform_.translation_;
 
@@ -103,6 +116,19 @@ void Enemy::Fire()
 
 	//弾を登録する
 	ebullets_.push_back(std::move(newBullet));
+}
+
+Vector3 Enemy::GetWorldPotision()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	//ワールド行列の平行移動成分を取得(ワールド座標)
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
 }
 
 void Enemy::ApproachReset()

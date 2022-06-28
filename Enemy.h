@@ -8,6 +8,9 @@
 #include <memory> 
 #include <list>
 
+//自機クラスの前方宣言
+class Player;
+
 /// <summary>
 /// 敵
 /// </summary>
@@ -43,13 +46,18 @@ public:
 	/// </summary>
 	void Fire();
 
+	void SetPlayer(Player* player) { player_ = player; }
+	
+	//ワールド座標を取得
+	Vector3 GetWorldPotision();
+
+//接近フェーズ初期化
+	void ApproachReset();
+
 public:
 
 	//発射間隔
 	static const int kFireInterval = 60;
-
-	//接近フェーズ初期化
-	void ApproachReset();
 
 private:
 
@@ -83,8 +91,12 @@ private:
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
+	//自キャラ
+	Player* player_ = nullptr;
 
 	//デバックテキスト
 	DebugText* debugText_ = nullptr;
+
+	
 };
 

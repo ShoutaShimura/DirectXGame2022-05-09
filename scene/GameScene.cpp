@@ -47,6 +47,9 @@ void GameScene::Initialize() {
 
 	enemy_ = new Enemy();
 
+	//敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_);
+
 	worldTransform_.translation_ = { 0,0,50 };
 	EworldTransform_.translation_ = { 20,0,50 };
 	enemy_->Initialize(model_, EworldTransform_.translation_);
