@@ -73,8 +73,7 @@ private:
 	//発射タイマー
 	int32_t fireTimer = 0;
 
-	//メンバ関数ポインタ
-	static void(Enemy::* spFuncTable[])();
+	
 
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -99,10 +98,5 @@ private:
 
 	//自キャラ
 	Player* player_ = nullptr;
-
-	//デバックテキスト
-	DebugText* debugText_ = nullptr;
-
-	
 };
 
