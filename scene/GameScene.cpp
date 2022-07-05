@@ -13,6 +13,10 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {
 	delete model_;
 
+	delete modelSkydome_;
+
+	delete skydome_;
+
 	//自キャラの解放
 	delete player_;
 
@@ -34,11 +38,16 @@ void GameScene::Initialize() {
 	//3Dモデルの生成
 	model_ = Model::Create();
 
+	modelSkydome_ = Model::CreateFromOBJ("tenkyu", true);
+
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
 	//デバッグカメラ
 	debugCamera_ = new DebugCamera(1280, 720);
+
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_,SkyworldTransform_.translation_);
 
 	//自キャラの生成
 	player_ = new Player();
@@ -57,6 +66,8 @@ void GameScene::Initialize() {
 };
 
 void GameScene::Update() {
+	skydome_->Update();
+
 	//自キャラの更新
 	player_->Update();
 
@@ -108,6 +119,7 @@ void GameScene::Draw() {
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

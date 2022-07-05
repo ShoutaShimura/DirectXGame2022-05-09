@@ -11,7 +11,8 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include "Player.h"
-#include"Enemy.h"
+#include "Enemy.h"
+#include "Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -61,6 +62,8 @@ class GameScene {
 	//3Dモデル
 	Model* model_ = nullptr;
 
+	Model* modelSkydome_ = nullptr;
+
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
@@ -73,10 +76,14 @@ class GameScene {
 	//敵
 	Enemy* enemy_ = nullptr;
 
+	//天球
+	Skydome* skydome_ = nullptr;
+
 	Vector3 velocty;
 
 	WorldTransform worldTransform_;
 	WorldTransform EworldTransform_;
+	WorldTransform SkyworldTransform_;
 
 	const float playerSize = 1;
 	const float enemySize = 1;
