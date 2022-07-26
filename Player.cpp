@@ -1,4 +1,5 @@
 #include "Player.h"
+#include"RailCamera.h"
 
 Player::Player()
 {
@@ -22,6 +23,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 	debugText_ = DebugText::GetInstance();
 
 	worldTransform_.Initialize();
+	
+	worldTransform_.translation_ = { 0, 0, 50 };
 }
 
 void Player::Update()
@@ -29,7 +32,7 @@ void Player::Update()
 	//デスフラグの立った弾を削除
 	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		return bullet->IsDead();
-	});
+		});
 
 	//移動
 	Move();
@@ -42,11 +45,20 @@ void Player::Update()
 		bullet->Update();
 	}
 
-	debugText_->SetPos(50, 50);
-	debugText_->Printf("Pos={%f,%f,%f}", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
+	debugText_->SetPos(50, 20);
+	debugText_->Printf("Player localPos={%f,%f,%f}", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
+
+	Vector3 hoge;
+
+	hoge = GetWorldPotision();
 
 	debugText_->SetPos(50, 0);
-	debugText_->Printf("%p", &worldTransform_.parent_);
+	debugText_->Printf("Player worldPos={%f,%f,%f}",hoge.x, hoge.y, hoge.z);
+
+
+	debugText_->SetPos(50, 40);
+	debugText_->Printf("Player rotate={%f,%f,%f}", worldTransform_.rotation_.x, worldTransform_.rotation_.y, worldTransform_.rotation_.z);
+
 }
 
 void
@@ -108,7 +120,10 @@ void Player::Move()
 	Matrix4 unit;
 	unit.MatIdentity();
 	worldTransform_.matWorld_ = unit;
-	worldTransform_.matWorld_ = worldTransform_.MatCal(worldTransform_);
+	worldTransform_.matWorld_ = unit.MatCal(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+	
+	
+	worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
 	
 	//行列更新
 	worldTransform_.TransferMatrix();
@@ -145,7 +160,9 @@ void Player::Attack()
 		//弾を生成し、初期化
 		//PlayerBullet* newBullet = new PlayerBullet();
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+		newBullet->Initialize(model_, GetWorldPotision(), velocity);
+
+
 
 		//弾を登録する
 		bullets_.push_back(std::move(newBullet));
@@ -165,6 +182,16 @@ Vector3 Player::GetWorldPotision()
 
 
 	return worldPos;
+}
+
+Vector3 Player::GetWorldRotation()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	
+	return worldPos;
+	return Vector3();
 }
 
 void Player::OnCollision()

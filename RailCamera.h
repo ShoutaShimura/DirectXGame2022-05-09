@@ -37,4 +37,7 @@ private:
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
+
+	//入力処理するため
+	Input* input_ = nullptr;
 };

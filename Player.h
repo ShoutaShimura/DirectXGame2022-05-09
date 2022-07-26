@@ -10,6 +10,8 @@
 #include <memory>
 #include <list>
 
+
+
 /// <summary>
 /// 自キャラ
 /// </summary>
@@ -55,18 +57,26 @@ public:
 	//ワールド座標を取得
 	Vector3 GetWorldPotision();
 
+	Vector3 GetWorldRotation();
+
 	//衝突したら呼び出されるコールバック関数
 	void OnCollision();
 
 	//弾リストを取得
 	const std::list < std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
-	const WorldTransform* SetWorldTransform(WorldTransform &worldtransform) { return worldTransform_.parent_=&worldtransform; }
+	const WorldTransform* SetWorldTransform(WorldTransform& worldtransform) { return worldTransform_.parent_ = &worldtransform; }
+
+	void SetParentWorldTransform(const WorldTransform& railCameraWorldTransform) { worldTransform_.parent_ = &railCameraWorldTransform; }
+
 
 private:
 
 	//ワールド変換データ
 	WorldTransform worldTransform_;
+
+	Matrix4 worldPos;
+
 
 	//モデル
 	Model* model_ = nullptr;
@@ -82,6 +92,8 @@ private:
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
+
+
 
 };
 

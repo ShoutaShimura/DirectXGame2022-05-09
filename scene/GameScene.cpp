@@ -48,12 +48,13 @@ void GameScene::Initialize() {
 	//デバッグカメラ
 	debugCamera_ = new DebugCamera(1280, 720);
 
+	//レールカメラの生成
 	railCamera_ = new RailCamera();
 	railCamera_->Initialize(Vector3(0, 0, -50), Vector3(0, 0, 0));
 
 	railWorldTransform_ = railCamera_->GetWorldMatrix();
 
-
+	//天球の生成
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_, SkyworldTransform_.translation_);
 
@@ -62,12 +63,14 @@ void GameScene::Initialize() {
 
 	//自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
-	player_->SetWorldTransform(worldTransform_);
+	
+	player_->SetParentWorldTransform(railCamera_->GetWorldMatrix());
 
-	worldTransform_.parent_ = &railWorldTransform_;
 
-	worldTransform_.translation_ = { 0,0,50 };
 
+
+
+	//敵キャラの生成
 	enemy_ = new Enemy();
 
 	//敵キャラに自キャラのアドレスを渡す
@@ -141,6 +144,7 @@ void GameScene::Draw() {
 	//自キャラの描画
 	player_->Draw(railCamera_->GetViewProjection());
 
+	//天球の描画
 	skydome_->Draw(railCamera_->GetViewProjection());
 
 	// 3Dオブジェクト描画後処理

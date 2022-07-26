@@ -9,7 +9,7 @@ void Skydome::Initialize(Model* model, const Vector3& position)
 
 	worldTransform_.translation_ = position;
 
-	worldTransform_.scale_ = { 100,100,100 };
+	worldTransform_.scale_ = { 1000,1000,1000 };
 
 	worldTransform_.Initialize();
 }
