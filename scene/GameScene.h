@@ -16,6 +16,7 @@
 #include "RailCamera.h"
 #include <memory>
 #include <list>
+#include <sstream>
 
 /// <summary>
 /// ゲームシーン
@@ -52,6 +53,25 @@ class GameScene {
 	/// 衝突判定と応答
 	/// </summary>
 	void CheckAllCollisions();
+
+	void EnemyBulletUpdate();
+	void EnemyBulletDraw();
+
+	//敵発生コマンド
+	std::stringstream enemyPopCommands;
+
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopData();
+
+
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdateEnemyPopCpmmands();
+
+	void EnemyBorn(const Vector3& position);
 
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -94,7 +114,30 @@ class GameScene {
 	const float playerSize = 1;
 	const float enemySize = 1;
 
+	//敵弾リスト
+	std::list<std::unique_ptr<EnemyBullet>> eBullets_;
+
+	//敵リスト
+	std::list<std::unique_ptr<Enemy>> enemys_;
+
+
+	//発射間隔
+	static const int kFireInterval = 60;
+
+	//発射タイマー
+	int32_t fireTimer = 0;
+
+	bool isWait = false;
+
+	int32_t waitTimer=0;
+
 public:
+	/// <summary>
+	/// 敵弾を追加する
+	/// </summary>
+	/// <param name="enemyBullet">敵弾</param>
+	void AddEnemyBullet(std::unique_ptr<EnemyBullet>enemyBullet);
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

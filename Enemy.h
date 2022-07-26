@@ -10,6 +10,7 @@
 
 //自機クラスの前方宣言
 class Player;
+class GameScene;
 
 /// <summary>
 /// 敵
@@ -47,7 +48,10 @@ public:
 	void Fire();
 
 	void SetPlayer(Player* player) { player_ = player; }
-	
+	void SetGameScene(GameScene* gamescene) {gameScene_ = gamescene; }
+
+	bool IsDead() const { return isDead_; }
+
 	//ワールド座標を取得
 	Vector3 GetWorldPotision();
 
@@ -57,8 +61,7 @@ public:
 	//衝突したら呼び出されるコールバック関数
 	void OnCollision();
 
-	//弾リストを取得
-	const std::list < std::unique_ptr<EnemyBullet>>& GetBullets() { return ebullets_; }
+	
 
 public:
 
@@ -67,8 +70,7 @@ public:
 
 private:
 
-	//弾
-	std::list<std::unique_ptr<EnemyBullet>> ebullets_;
+
 
 	//発射タイマー
 	int32_t fireTimer = 0;
@@ -98,5 +100,11 @@ private:
 
 	//自キャラ
 	Player* player_ = nullptr;
+	GameScene* gameScene_ = nullptr;
+
+	//デスフラグ
+	bool isDead_ = false;
+
+
 };
 

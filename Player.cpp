@@ -32,7 +32,7 @@ void Player::Update()
 	//ƒfƒXƒtƒ‰ƒO‚Ì—§‚Á‚½’e‚ğíœ
 	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		return bullet->IsDead();
-		});
+	});
 
 	//ˆÚ“®
 	Move();
@@ -161,8 +161,6 @@ void Player::Attack()
 		//PlayerBullet* newBullet = new PlayerBullet();
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
 		newBullet->Initialize(model_, GetWorldPotision(), velocity);
-
-
 
 		//’e‚ğ“o˜^‚·‚é
 		bullets_.push_back(std::move(newBullet));

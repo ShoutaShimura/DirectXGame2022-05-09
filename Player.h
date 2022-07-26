@@ -77,7 +77,6 @@ private:
 
 	Matrix4 worldPos;
 
-
 	//ƒ‚ƒfƒ‹
 	Model* model_ = nullptr;
 

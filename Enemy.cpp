@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include"Player.h"
+#include"GameScene.h"
 
 Enemy::Enemy()
 {
@@ -24,6 +25,7 @@ void Enemy::Initialize(Model* model, const Vector3& position)
 	ApproachReset();
 
 	worldTransform_.Initialize();
+
 }
 
 void Enemy::Update()
@@ -38,16 +40,7 @@ void Enemy::Update()
 		Leave();
 		break;
 	}
-
-	//デスフラグの立った弾を削除
-	ebullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
-		return bullet->IsDead();
-	});
-
-	for (std::unique_ptr<EnemyBullet>& ebullet:ebullets_) {
-		ebullet->Update();
-	}
-
+	
 	//行列を更新
 	Matrix4 unit;
 	unit.MatIdentity();
@@ -60,10 +53,7 @@ void Enemy::Update()
 void Enemy::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-
-	for (std::unique_ptr<EnemyBullet>&ebullet:ebullets_) {
-		ebullet->Draw(viewProjection);
-	}
+	
 }
 
 void Enemy::Approach()
@@ -114,7 +104,8 @@ void Enemy::Fire()
 	newBullet->Initialize(model_,position, bVelocity);
 
 	//弾を登録する
-	ebullets_.push_back(std::move(newBullet));
+	gameScene_->AddEnemyBullet((std::move(newBullet)));
+
 }
 
 Vector3 Enemy::GetWorldPotision()
@@ -138,4 +129,5 @@ void Enemy::ApproachReset()
 
 void Enemy::OnCollision()
 {
+	isDead_ = true;
 }
