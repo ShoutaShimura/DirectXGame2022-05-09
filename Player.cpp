@@ -1,6 +1,5 @@
 #include "Player.h"
 
-
 Player::Player()
 {
 }
@@ -45,10 +44,13 @@ void Player::Update()
 
 	debugText_->SetPos(50, 50);
 	debugText_->Printf("Pos={%f,%f,%f}", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
+
+	debugText_->SetPos(50, 0);
+	debugText_->Printf("%p", &worldTransform_.parent_);
 }
 
 void
-Player::Draw(ViewProjection& viewProjection)
+Player::Draw(const ViewProjection& viewProjection)
 {
 	//3Dモデルを描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
@@ -106,8 +108,8 @@ void Player::Move()
 	Matrix4 unit;
 	unit.MatIdentity();
 	worldTransform_.matWorld_ = unit;
-	worldTransform_.matWorld_ = unit.MatCal(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
+	worldTransform_.matWorld_ = worldTransform_.MatCal(worldTransform_);
+	
 	//行列更新
 	worldTransform_.TransferMatrix();
 }

@@ -25,7 +25,7 @@ void Skydome::Update()
 	worldTransform_.TransferMatrix();
 }
 
-void Skydome::Draw(ViewProjection& viewProjection)
+void Skydome::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection);
 }

@@ -35,7 +35,7 @@ public:
 	/// 描画
 	/// </summary>
 	/// <param name="viewProjection>ビュープロジェクション（参照渡し）</param>
-	void Draw(ViewProjection& viewProjection);
+	void Draw(const ViewProjection& viewProjection);
 
 	/// <summary>
 	/// 移動
@@ -61,6 +61,8 @@ public:
 	//弾リストを取得
 	const std::list < std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
+	const WorldTransform* SetWorldTransform(WorldTransform &worldtransform) { return worldTransform_.parent_=&worldtransform; }
+
 private:
 
 	//ワールド変換データ
@@ -80,8 +82,6 @@ private:
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
-
-	
 
 };
 

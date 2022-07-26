@@ -23,6 +23,8 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 
 	delete enemy_;
+
+	delete railCamera_;
 }
 
 void GameScene::Initialize() {
@@ -46,26 +48,44 @@ void GameScene::Initialize() {
 	//デバッグカメラ
 	debugCamera_ = new DebugCamera(1280, 720);
 
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize(Vector3(0, 0, -50), Vector3(0, 0, 0));
+
+	railWorldTransform_ = railCamera_->GetWorldMatrix();
+
+
 	skydome_ = new Skydome();
-	skydome_->Initialize(modelSkydome_,SkyworldTransform_.translation_);
+	skydome_->Initialize(modelSkydome_, SkyworldTransform_.translation_);
 
 	//自キャラの生成
 	player_ = new Player();
+
 	//自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
+	player_->SetWorldTransform(worldTransform_);
+
+	worldTransform_.parent_ = &railWorldTransform_;
+
+	worldTransform_.translation_ = { 0,0,50 };
 
 	enemy_ = new Enemy();
 
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
 
-	worldTransform_.translation_ = { 0,0,50 };
 	EworldTransform_.translation_ = { 20,0,50 };
 	enemy_->Initialize(model_, EworldTransform_.translation_);
 
 };
 
 void GameScene::Update() {
+	railCamera_->Update();
+
+	viewProjection_.matView = railCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+
+	viewProjection_.TransferMatrix();
+
 	skydome_->Update();
 
 	//自キャラの更新
@@ -79,6 +99,10 @@ void GameScene::Update() {
 
 	debugText_->SetPos(50, 80);
 	debugText_->Printf("eye={%f,%f,%f}", viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
+
+
+	debugText_->SetPos(50, 180);
+	debugText_->Printf("%p", &railWorldTransform_);
 
 }
 
@@ -110,16 +134,14 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-
-
 	if (enemy_ != nullptr) {
-		enemy_->Draw(viewProjection_);
+		enemy_->Draw(railCamera_->GetViewProjection());
 	}
 
 	//自キャラの描画
-	player_->Draw(viewProjection_);
+	player_->Draw(railCamera_->GetViewProjection());
 
-	skydome_->Draw(viewProjection_);
+	skydome_->Draw(railCamera_->GetViewProjection());
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -155,9 +177,9 @@ void GameScene::CheckAllCollisions()
 
 
 #pragma region
-//自キャラと敵弾の当たり判定
-	
-	//自キャラの座標
+	//自キャラと敵弾の当たり判定
+
+		//自キャラの座標
 	posA = player_->GetWorldPotision();
 
 	//自キャラと敵弾全ての当たり判定
@@ -173,7 +195,7 @@ void GameScene::CheckAllCollisions()
 		float dy = (posB.y - posA.y);
 		float dz = (posB.z - posA.z);
 
-		float L = (enemySize + playerSize)* (enemySize + playerSize);
+		float L = (enemySize + playerSize) * (enemySize + playerSize);
 
 		float distance = (dx * dx) + (dy * dy) + (dz * dz);
 
@@ -190,9 +212,9 @@ void GameScene::CheckAllCollisions()
 #pragma endregion
 
 #pragma region
-//自弾と敵キャラの当たり判定
+	//自弾と敵キャラの当たり判定
 
-	//敵キャラの座標
+		//敵キャラの座標
 	posA = enemy_->GetWorldPotision();
 
 	//敵キャラと自弾全ての当たり判定
@@ -224,9 +246,9 @@ void GameScene::CheckAllCollisions()
 #pragma endregion
 
 #pragma region
-//自弾と敵弾の当たり判定
+	//自弾と敵弾の当たり判定
 
-	//自弾と敵弾全ての当たり判定
+		//自弾と敵弾全ての当たり判定
 	for (const std::unique_ptr<PlayerBullet>& pbullet : playerBullets) {
 		for (const std::unique_ptr<EnemyBullet>& ebullet : enemyBullets) {
 			//自弾の座標

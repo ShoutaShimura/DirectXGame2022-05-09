@@ -27,7 +27,7 @@ struct WorldTransform {
 	// ローカル → ワールド変換行列
 	Matrix4 matWorld_;
 	// 親となるワールド変換へのポインタ
-	WorldTransform* parent_ = nullptr;
+	const WorldTransform* parent_ = nullptr;
 
 	/// <summary>
 	/// 初期化
@@ -48,4 +48,32 @@ struct WorldTransform {
 
 
 
+	Matrix4 MatCal(WorldTransform worldTransform) {
+
+		Matrix4 unit;
+		unit.MatIdentity();
+		Matrix4 matScale;
+		matScale.MatScale(worldTransform.scale_);
+		Matrix4 matRotZ;
+		matRotZ.MatRotZ(worldTransform.rotation_.z);
+		Matrix4 matRotX;
+		matRotX.MatRotX(worldTransform.rotation_.x);
+		Matrix4 matRotY;
+		matRotY.MatRotY(worldTransform.rotation_.y);
+		Matrix4 matTrans;
+		matTrans.MatTrans(worldTransform.translation_);
+
+		unit *= matScale;
+		unit *= matRotZ;
+		unit *= matRotX;
+		unit *= matRotY;
+		unit *= matTrans;
+
+		if (parent_)
+		{
+			worldTransform.matWorld_ *= worldTransform.parent_->matWorld_;
+		}
+
+		return unit;
+	}
 };

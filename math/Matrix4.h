@@ -2,6 +2,7 @@
 #include<math.h>
 #include<Vector3.h>
 
+
 /// <summary>
 /// 行列
 /// </summary>
@@ -178,8 +179,6 @@ public:
 		m[3][0] = tx;
 		m[3][1] = ty;
 		m[3][2] = tz;
-
-
 	};
 
 	void MatTrans(Vector3 t) {
@@ -189,8 +188,6 @@ public:
 		m[3][0] = t.x;
 		m[3][1] = t.y;
 		m[3][2] = t.z;
-
-
 	};
 
 	Matrix4 CreateMatIdentity() {
@@ -255,9 +252,6 @@ public:
 		return vec;
 
 	}
-
-
-
 
 
 };

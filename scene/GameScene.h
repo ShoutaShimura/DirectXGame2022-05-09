@@ -13,6 +13,9 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Skydome.h"
+#include "RailCamera.h"
+#include <memory>
+#include <list>
 
 /// <summary>
 /// ゲームシーン
@@ -79,11 +82,14 @@ class GameScene {
 	//天球
 	Skydome* skydome_ = nullptr;
 
+	RailCamera* railCamera_ = nullptr;
+
 	Vector3 velocty;
 
 	WorldTransform worldTransform_;
 	WorldTransform EworldTransform_;
 	WorldTransform SkyworldTransform_;
+	WorldTransform railWorldTransform_;
 
 	const float playerSize = 1;
 	const float enemySize = 1;
